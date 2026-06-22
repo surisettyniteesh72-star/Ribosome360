@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ribosome360: DNA Translation & Mutation Simulator</title>
+  <meta name="description" content="An interactive, fully animated DNA transcription, translation, and mutation simulator redesigned from classic biology guides. Explore codons, ribosome structures, and mutations in real-time.">
+  <meta name="keywords" content="central dogma, transcription, translation, dna, rna, protein, ribosome, mutation, biology simulator, codon wheel">
+  
+  <!-- Modern Typography and Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js for statistics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="app-brand" id="app-logo">
+        <div class="logo-icon">
+          <i class="fa-solid fa-dna logo-spin"></i>
+        </div>
+        <div class="logo-text">
+          <h1>Ribosome<span>360</span></h1>
+          <p>Interactive Bio-Simulation Engine</p>
+        </div>
+      </div>
+      
+      <nav class="app-nav">
+        <ul class="nav-links">
+          <li><button class="nav-btn active" data-tab="learn-tab" id="btn-tab-learn"><i class="fa-solid fa-book-open"></i> Learn Article</button></li>
+          <li><button class="nav-btn" data-tab="transcribe-tab" id="btn-tab-transcribe"><i class="fa-solid fa-scissors"></i> Transcription</button></li>
+          <li><button class="nav-btn" data-tab="translate-tab" id="btn-tab-translate"><i class="fa-solid fa-gears"></i> Translation</button></li>
+          <li><button class="nav-btn" data-tab="mutation-tab" id="btn-tab-mutation"><i class="fa-solid fa-triangle-exclamation"></i> Mutation Sandbox</button></li>
+          <li><button class="nav-btn" data-tab="codon-tab" id="btn-tab-codon"><i class="fa-solid fa-circle-nodes"></i> Codon Wheel & Stats</button></li>
+          <li><button class="nav-btn" data-tab="quiz-tab" id="btn-tab-quiz"><i class="fa-solid fa-circle-question"></i> Biology Quiz</button></li>
+        </ul>
+      </nav>
+      
+      <div class="preset-selector-container">
+        <label for="gene-preset-select"><i class="fa-solid fa-file-code"></i> Gene Preset:</label>
+        <select id="gene-preset-select" class="preset-select">
+          <!-- Populated by app.js -->
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- Browser Self-Test Banner (Floating notifications check) -->
+  <div id="test-banner" class="test-banner hidden">
+    <div class="test-banner-content">
+      <span class="test-badge"><i class="fa-solid fa-circle-check"></i> BIO-ENGINE READY</span>
+      <span class="test-text">All bioinformatics translation & mutation algorithms verified.</span>
+      <button class="close-banner" id="btn-close-banner">&times;</button>
+    </div>
+  </div>
+
+  <main class="app-main-content">
+    
+    <!-- ================= LEARN TAB (REDESIGNED SCITABLE ARTICLE) ================= -->
+    <section id="learn-tab" class="tab-pane active">
+      <div class="article-layout">
+        <article class="scitable-article">
+          <div class="article-hero">
+            <span class="article-category">Topic Room: Nucleic Acid Structure & Function</span>
+            <h1 class="article-title">Translation: DNA to mRNA to Protein</h1>
+            <div class="article-meta">
+              <span class="author-avatar"><i class="fa-solid fa-user-doctor"></i></span>
+              <div class="author-info">
+                <p class="author-name">Redesigned from Clancy, S. & Brown, W. (2008)</p>
+                <p class="citation-detail">Nature Education 1(1):101 • Updated with 3D Ribosome Simulations</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="article-body">
+            <p class="lead-paragraph">
+              How does the cell convert DNA into working proteins? The process of translation can be seen as the decoding of instructions for making proteins, involving mRNA in transcription as well as tRNA.
+            </p>
+            
+            <div class="article-divider"></div>
+            
+            <h2>1. The Flow of Genetic Information</h2>
+            <p>
+              The genes in DNA encode protein molecules, which are the "workhorses" of the cell, carrying out all the functions necessary for life. For example, enzymes, including those that metabolize nutrients and synthesize new cellular constituents, as well as DNA polymerases and other enzymes that make copies of DNA during cell division, are all proteins.
+            </p>
+            <p>
+              In the simplest sense, expressing a gene means manufacturing its corresponding protein, and this multilayered process has two major steps:
+            </p>
+            
+            <!-- Dynamic Mini-Visualizer Card -->
+            <div class="interactive-card central-dogma-card">
+              <h3><i class="fa-solid fa-circle-nodes"></i> Central Dogma Interactive Overview</h3>
+              <div class="dogma-flow">
+                <div class="dogma-node dna-node">
+                  <div class="node-icon"><i class="fa-solid fa-dna"></i></div>
+                  <span class="node-title">DNA</span>
+                  <span class="node-desc">Double Helix (Information Store)</span>
+                </div>
+                <div class="dogma-arrow">
+                  <i class="fa-solid fa-arrow-right"></i>
+                  <span class="arrow-label">Transcription</span>
+                </div>
+                <div class="dogma-node rna-node">
+                  <div class="node-icon"><i class="fa-solid fa-note-sticky"></i></div>
+                  <span class="node-title">mRNA</span>
+                  <span class="node-desc">Single Strand (Messenger)</span>
+                </div>
+                <div class="dogma-arrow">
+                  <i class="fa-solid fa-arrow-right"></i>
+                  <span class="arrow-label">Translation</span>
+                </div>
+                <div class="dogma-node protein-node">
+                  <div class="node-icon"><i class="fa-solid fa-cubes"></i></div>
+                  <span class="node-title">Protein</span>
+                  <span class="node-desc">Polypeptide (Functional Unit)</span>
+                </div>
+              </div>
+            </div>
+
+            <p>
+              During <strong>transcription</strong>, the DNA of a gene serves as a template for complementary base-pairing, and an enzyme called <strong>RNA polymerase II</strong> catalyzes the formation of a pre-mRNA molecule, which is then processed to form mature mRNA. The resulting mRNA is a single-stranded copy of the gene, which next must be translated into a protein molecule.
+            </p>
+            <p>
+              During <strong>translation</strong>, the mRNA is "read" according to the genetic code, which relates the DNA sequence to the amino acid sequence in proteins. Each group of three bases in mRNA constitutes a <strong>codon</strong>, and each codon specifies a particular amino acid (hence, it is a triplet code).
+            </p>
+            
+            <h2>2. Where Translation Occurs</h2>
+            <p>
+              Within all cells, the translation machinery resides within a specialized organelle called the <strong>ribosome</strong>.
+            </p>
+            
+            <div class="coupled-note-card">
+              <h4><i class="fa-solid fa-dna"></i> Prokaryotes vs. Eukaryotes</h4>
+              <div class="split-comparison">
+                <div>
+                  <h5>Eukaryotic Organisms</h5>
+                  <p>Mature mRNA molecules must leave the nucleus and travel to the cytoplasm, where the ribosomes are located. Transcription and translation are temporally and spatially separated.</p>
+                </div>
+                <div class="border-left">
+                  <h5>Prokaryotic Organisms</h5>
+                  <p>Ribosomes can attach to mRNA while it is still being transcribed. Transcription and translation are <strong>coupled</strong>, occurring simultaneously in the same compartment.</p>
+                </div>
+              </div>
+            </div>
+
+            <h2>3. The Ribbon of Life: tRNA & The Ribosome</h2>
+            <p>
+              The ribosome is composed of a large subunit (50S in prokaryotes, 60S in eukaryotes) and a small subunit (30S in prokaryotes, 40S in eukaryotes). Inside, there are three active sites where tRNA molecules dock: the <strong>A (Aminoacyl) site</strong>, the <strong>P (Peptidyl) site</strong>, and the <strong>E (Exit) site</strong>.
+            </p>
+            <p>
+              The transfer RNA (tRNA) acts as the physical link between the mRNA code and the amino acid chain. Each tRNA has an <strong>anticodon loop</strong> that is complementary to the mRNA codon, and holds the matching amino acid on its 3' acceptor stem.
+            </p>
+            
+            <div class="article-cta-box">
+              <h4>Want to see it in action?</h4>
+              <p>Skip to our fully animated simulator tabs to interact with transcription bubbles, watch the ribosome peptide transfer cycle, or simulate mutational frame shifts.</p>
+              <div class="cta-buttons">
+                <button class="cta-btn primary-cta" onclick="document.getElementById('btn-tab-transcribe').click()"><i class="fa-solid fa-scissors"></i> Open Transcription</button>
+                <button class="cta-btn secondary-cta" onclick="document.getElementById('btn-tab-translate').click()"><i class="fa-solid fa-gears"></i> Open Translation</button>
+              </div>
+            </div>
+          </div>
+        </article>
+        
+        <!-- Sidebar containing fast lookup tools -->
+        <aside class="article-sidebar">
+          <div class="sidebar-widget">
+            <h3><i class="fa-solid fa-magnifying-glass"></i> Preset Highlights</h3>
+            <p>Select pre-loaded biological sequences in the header dropdown to view their specs instantly:</p>
+            <ul class="highlight-list">
+              <li><strong>Hemoglobin Beta (HBB)</strong>: Oxygen carrier in blood. Mutated in sickle-cell anemia.</li>
+              <li><strong>Green Fluorescent Protein (GFP)</strong>: Glowing protein from jellyfish, crucial bio-marker.</li>
+              <li><strong>Insulin (INS)</strong>: Key hormone regulating glucose levels.</li>
+            </ul>
+          </div>
+          
+          <div class="sidebar-widget quick-stats-widget">
+            <h3><i class="fa-solid fa-chart-pie"></i> Selected Gene Stats</h3>
+            <div class="stat-grid-mini">
+              <div class="stat-box-mini">
+                <span class="lbl">DNA Length</span>
+                <span class="val" id="mini-stat-dna-len">0 bp</span>
+              </div>
+              <div class="stat-box-mini">
+                <span class="lbl">GC Content</span>
+                <span class="val" id="mini-stat-gc">0%</span>
+              </div>
+              <div class="stat-box-mini">
+                <span class="lbl">Est. MW (Protein)</span>
+                <span class="val" id="mini-stat-mw">0 Da</span>
+              </div>
+              <div class="stat-box-mini">
+                <span class="lbl">Peptide Length</span>
+                <span class="val" id="mini-stat-pep-len">0 aa</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ================= TRANSCRIPTION SIMULATOR ================= -->
+    <section id="transcribe-tab" class="tab-pane">
+      <div class="simulation-layout">
+        <!-- Control Panel -->
+        <div class="sim-controls-panel">
+          <h2><i class="fa-solid fa-sliders"></i> Transcription Controls</h2>
+          <div class="control-group">
+            <label for="dna-input-field">DNA Coding Strand (5' &rarr; 3'):</label>
+            <textarea id="dna-input-field" class="seq-textarea font-mono" placeholder="Enter DNA Sequence (A, T, C, G)..."></textarea>
+            <span class="input-error" id="dna-input-error"></span>
+          </div>
+          
+          <div class="settings-grid">
+            <div class="setting-item">
+              <label for="transcribe-mode-select">Transcription Mode:</label>
+              <select id="transcribe-mode-select" class="styled-select">
+                <option value="coding">Coding Strand (T &rarr; U)</option>
+                <option value="template">Template Strand (Complementary)</option>
+              </select>
+            </div>
+            
+            <div class="setting-item">
+              <label for="transcribe-speed-slider">Speed (nucleotides/sec):</label>
+              <input type="range" id="transcribe-speed-slider" min="1" max="10" value="3">
+              <span id="transcribe-speed-val" class="slider-val">3</span>
+            </div>
+          </div>
+          
+          <div class="action-buttons-group">
+            <button id="btn-transcribe-play" class="btn btn-primary"><i class="fa-solid fa-play"></i> Play</button>
+            <button id="btn-transcribe-step" class="btn btn-secondary"><i class="fa-solid fa-forward-step"></i> Step</button>
+            <button id="btn-transcribe-pause" class="btn btn-secondary" disabled><i class="fa-solid fa-pause"></i> Pause</button>
+            <button id="btn-transcribe-reset" class="btn btn-danger"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+          </div>
+          
+          <div class="status-card">
+            <h3><i class="fa-solid fa-signal"></i> System Status</h3>
+            <p id="transcribe-status-text">Ready to transcribe</p>
+            <div class="progress-bar-container">
+              <div id="transcribe-progress-bar" class="progress-bar" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Interactive Visualizer -->
+        <div class="sim-visualizer-panel">
+          <div class="panel-header">
+            <h3><i class="fa-solid fa-eye"></i> RNA Polymerase Bubble Visualizer</h3>
+            <span class="badge info-badge">Interactive SVG</span>
+          </div>
+          <div class="visualizer-container" id="transcribe-canvas-parent">
+            <!-- Dynamic SVG will be rendered here -->
+            <svg id="transcribe-svg" width="100%" height="320" viewBox="0 0 800 320">
+              <!-- Placeholder structure style -->
+            </svg>
+          </div>
+          <div class="legend-panel">
+            <span class="legend-item"><span class="legend-color base-a"></span> Adenine (A)</span>
+            <span class="legend-item"><span class="legend-color base-t"></span> Thymine (T)</span>
+            <span class="legend-item"><span class="legend-color base-u"></span> Uracil (U)</span>
+            <span class="legend-item"><span class="legend-color base-c"></span> Cytosine (C)</span>
+            <span class="legend-item"><span class="legend-color base-g"></span> Guanine (G)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TRANSLATION SIMULATOR ================= -->
+    <section id="translate-tab" class="tab-pane">
+      <div class="simulation-layout">
+        <!-- Control Panel -->
+        <div class="sim-controls-panel">
+          <h2><i class="fa-solid fa-sliders"></i> Translation Controls</h2>
+          <div class="control-group">
+            <label for="mrna-input-field">mRNA Strand (5' &rarr; 3'):</label>
+            <textarea id="mrna-input-field" class="seq-textarea font-mono" placeholder="Enter mRNA Sequence (A, U, C, G)..."></textarea>
+            <span class="input-error" id="mrna-input-error"></span>
+          </div>
+          
+          <div class="settings-grid">
+            <div class="setting-item">
+              <label for="translate-mode-select">Coupled Mode:</label>
+              <select id="translate-mode-select" class="styled-select">
+                <option value="decoupled">Decoupled (Eukaryotic - Standalone)</option>
+                <option value="coupled">Coupled (Prokaryotic - Simulataneous Trans/Trans)</option>
+              </select>
+            </div>
+            
+            <div class="setting-item">
+              <label for="translate-speed-slider">Speed (codons/sec):</label>
+              <input type="range" id="translate-speed-slider" min="1" max="5" value="2">
+              <span id="translate-speed-val" class="slider-val">2</span>
+            </div>
+          </div>
+          
+          <div class="action-buttons-group">
+            <button id="btn-translate-play" class="btn btn-primary"><i class="fa-solid fa-play"></i> Play</button>
+            <button id="btn-translate-step" class="btn btn-secondary"><i class="fa-solid fa-forward-step"></i> Step</button>
+            <button id="btn-translate-pause" class="btn btn-secondary" disabled><i class="fa-solid fa-pause"></i> Pause</button>
+            <button id="btn-translate-reset" class="btn btn-danger"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+          </div>
+          
+          <div class="status-card">
+            <h3><i class="fa-solid fa-signal"></i> Translation Status</h3>
+            <p id="translate-status-text">Ready to translate</p>
+            <div class="progress-bar-container">
+              <div id="translate-progress-bar" class="progress-bar" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Interactive Visualizer -->
+        <div class="sim-visualizer-panel">
+          <div class="panel-header">
+            <h3><i class="fa-solid fa-eye"></i> Ribosomal Synthesis Visualizer</h3>
+            <span class="badge info-badge">Interactive Ribosome SVG</span>
+          </div>
+          <div class="visualizer-container" id="translate-canvas-parent">
+            <!-- Dynamic Translation SVG -->
+            <svg id="translate-svg" width="100%" height="320" viewBox="0 0 800 320">
+              <!-- Rendered via simulator.js -->
+            </svg>
+          </div>
+          <div class="pep-chain-display">
+            <h4>Polypeptide Chain:</h4>
+            <div id="polypeptide-display-list" class="pep-list">
+              <span class="pep-empty">No amino acids synthesized yet. Click Play to start.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MUTATION SANDBOX ================= -->
+    <section id="mutation-tab" class="tab-pane">
+      <div class="mutation-sandbox-container">
+        <div class="sandbox-header">
+          <h2><i class="fa-solid fa-triangle-exclamation"></i> Mutation Sandbox</h2>
+          <p>Introduce single base substitutions, insertions, or deletions to see the cascade effect on transcription, codon reading frames, and amino acid sequences.</p>
+        </div>
+        
+        <div class="sequence-editors-grid">
+          <!-- Wild Type Input -->
+          <div class="seq-editor-box wt-border">
+            <div class="box-title">
+              <h3>Wild-Type (Normal) DNA</h3>
+              <span class="tag wt-tag">Control</span>
+            </div>
+            <textarea id="mut-wt-input" class="seq-textarea font-mono" placeholder="Enter DNA Sequence..."></textarea>
+            <div class="seq-helper-bar">
+              <span id="wt-input-count">Length: 0 bp</span>
+            </div>
+          </div>
+          
+          <!-- Mutant Input -->
+          <div class="seq-editor-box mut-border">
+            <div class="box-title">
+              <h3>Mutated DNA</h3>
+              <span class="tag mut-tag">Experiment</span>
+            </div>
+            <textarea id="mut-mut-input" class="seq-textarea font-mono" placeholder="Copy-paste WT and edit or insert mutations..."></textarea>
+            <div class="seq-helper-bar">
+              <span id="mut-input-count">Length: 0 bp</span>
+              <button id="btn-sync-wt" class="btn btn-xs-link"><i class="fa-solid fa-copy"></i> Sync with Wild-Type</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-Time Mutation Impact Report -->
+        <div class="mutation-analysis-card" id="mutation-report-card">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-clipboard-list"></i> Mutational Consequence Report</h3>
+            <span class="mutation-badge info" id="mutation-badge-type">None Detected</span>
+          </div>
+          <div class="card-body">
+            <div class="impact-text-block">
+              <p class="impact-title">Variant Classification:</p>
+              <h4 id="mutation-effect-desc">No mutations have been detected. Sync or modify the Mutated DNA strand to analyze.</h4>
+            </div>
+            
+            <!-- Side by Side Codon Alignments -->
+            <div class="codon-alignment-viewer">
+              <div class="alignment-header">
+                <span>Codon Alignment Compare (5' &rarr; 3'):</span>
+              </div>
+              <div class="alignment-row">
+                <div class="row-label">WT Codons:</div>
+                <div class="codon-seq font-mono" id="alignment-wt-codons">
+                  <!-- Injected via mutation.js -->
+                </div>
+              </div>
+              <div class="alignment-row">
+                <div class="row-label">Mut Codons:</div>
+                <div class="codon-seq font-mono" id="alignment-mut-codons">
+                  <!-- Injected via mutation.js -->
+                </div>
+              </div>
+              
+              <div class="alignment-row peptide-row">
+                <div class="row-label">WT Protein:</div>
+                <div class="pep-seq font-mono" id="alignment-wt-protein">
+                  <!-- Injected via mutation.js -->
+                </div>
+              </div>
+              <div class="alignment-row peptide-row">
+                <div class="row-label">Mut Protein:</div>
+                <div class="pep-seq font-mono" id="alignment-mut-protein">
+                  <!-- Injected via mutation.js -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CODON WHEEL & STATS ================= -->
+    <section id="codon-tab" class="tab-pane">
+      <div class="stats-layout">
+        <!-- Interactive Codon Wheel Panel -->
+        <div class="codon-wheel-panel">
+          <div class="panel-header">
+            <h2><i class="fa-solid fa-circle-notch"></i> Interactive Codon Decoder Wheel</h2>
+            <p>Click sections from the center (1st Base) outwards to decode codons. Hover to read chemical characteristics.</p>
+          </div>
+          <div class="codon-wheel-container">
+            <!-- Dynamic SVG Codon Wheel -->
+            <div id="codon-wheel-svg-parent">
+              <!-- Generated in ui.js -->
+            </div>
+            
+            <div class="decoder-tooltip" id="codon-decoder-tooltip">
+              <h4>Codon Decoder</h4>
+              <p>Hover over a slice or type in a triplet below to decode properties.</p>
+              <div class="decoder-values">
+                <div class="val-box"><span class="lbl">Codon</span><span class="val" id="tip-codon">---</span></div>
+                <div class="val-box"><span class="lbl">Amino Acid</span><span class="val" id="tip-aa">---</span></div>
+                <div class="val-box"><span class="lbl">Properties</span><span class="val" id="tip-prop">---</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Live Sequence Stats and Charting Panel -->
+        <div class="sequence-stats-panel">
+          <h2><i class="fa-solid fa-chart-simple"></i> Biological Sequence Dashboard</h2>
+          
+          <div class="stats-cards-grid">
+            <div class="stat-card">
+              <span class="icon-span"><i class="fa-solid fa-gauge-high"></i></span>
+              <div class="stat-text">
+                <span class="lbl">GC Content</span>
+                <h3 id="stat-gc-pct">0%</h3>
+              </div>
+            </div>
+            <div class="stat-card">
+              <span class="icon-span"><i class="fa-solid fa-scale-balanced"></i></span>
+              <div class="stat-text">
+                <span class="lbl">Molecular Weight</span>
+                <h3 id="stat-mol-wt">0 Da</h3>
+              </div>
+            </div>
+            <div class="stat-card">
+              <span class="icon-span"><i class="fa-solid fa-ruler-horizontal"></i></span>
+              <div class="stat-text">
+                <span class="lbl">Protein Length</span>
+                <h3 id="stat-prot-len">0 residues</h3>
+              </div>
+            </div>
+          </div>
+          
+          <div class="chart-container-box">
+            <h3><i class="fa-solid fa-chart-column"></i> Amino Acid Class Composition</h3>
+            <canvas id="amino-acid-chart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= QUIZ TAB ================= -->
+    <section id="quiz-tab" class="tab-pane">
+      <div class="quiz-container-box">
+        <div class="quiz-intro-card" id="quiz-intro">
+          <div class="quiz-header-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+          <h2>Translation & Mutation Challenger</h2>
+          <p>Test your understanding of the Central Dogma, translation kinetics, ribosomal sites, and frame-shift mutation classifications based on the Nature Scitable article.</p>
+          <button id="btn-start-quiz" class="btn btn-primary"><i class="fa-solid fa-play"></i> Start Challenger Quiz</button>
+        </div>
+        
+        <div class="quiz-active-card hidden" id="quiz-active">
+          <div class="quiz-progress-header">
+            <span id="quiz-question-number">Question 1 of 5</span>
+            <span id="quiz-score-indicator"><i class="fa-solid fa-star"></i> Score: 0</span>
+          </div>
+          <div class="progress-bar-container mini-bar">
+            <div id="quiz-progress-bar" class="progress-bar" style="width: 20%"></div>
+          </div>
+          
+          <div class="quiz-question-body">
+            <h3 id="quiz-question-text">Question goes here?</h3>
+            <div class="quiz-options-list" id="quiz-options">
+              <!-- Injected by quiz.js -->
+            </div>
+          </div>
+          
+          <div class="quiz-explanation-box hidden" id="quiz-explanation">
+            <h4 id="explanation-status"><i class="fa-solid fa-circle-check"></i> Correct!</h4>
+            <p id="explanation-text">Detailed biological explanation will appear here.</p>
+            <button id="btn-next-question" class="btn btn-primary">Continue <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+        </div>
+        
+        <div class="quiz-results-card hidden" id="quiz-results">
+          <div class="quiz-header-icon"><i class="fa-solid fa-trophy"></i></div>
+          <h2>Challenger Completed!</h2>
+          <h3 id="quiz-final-score">Your Score: 4/5</h3>
+          <p id="quiz-final-evaluation">Great job! You have a solid grasp of how ribosomes synthesize polypeptides and how mutations affect sequences.</p>
+          <button id="btn-restart-quiz" class="btn btn-secondary"><i class="fa-solid fa-rotate-left"></i> Try Again</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p>&copy; 2026 Ribosome360. Redesigned for Advanced Biological Simulators.</p>
+      <div class="footer-links">
+        <a href="https://www.nature.com/scitable/topicpage/translation-dna-to-mrna-to-protein-393/" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> Original Nature Scitable Reference</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Loaded JS Modules sequentially -->
+  <script src="js/translator.js"></script>
+  <script src="js/mutation.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/simulator.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
